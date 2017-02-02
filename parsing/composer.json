@@ -1,0 +1,18 @@
+{
+  "name": "demo/demo",
+  "description": "description_text",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "author's name",
+      "email": "email@example.com"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "6.2.2",
+    "atofighi/phpquery": "2.0.1",
+    "electrolinux/phpquery": "^0.9.6",
+    "heretree/phpquery": "0.9.6.x-dev"
+  }
+}

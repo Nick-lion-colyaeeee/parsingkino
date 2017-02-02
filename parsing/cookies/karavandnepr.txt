@@ -1,0 +1,1 @@
+[{"Name":"cinemaN","Value":"0000000011","Domain":"multiplex.ua","Path":"\/","Max-Age":null,"Expires":1516127515,"Secure":false,"Discard":false,"HttpOnly":false}]
