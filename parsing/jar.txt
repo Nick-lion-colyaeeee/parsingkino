@@ -1,1 +1,0 @@
-"PHPSESSID=d114015e72ad544720257aeea8a8794c; vh_search_open=0"

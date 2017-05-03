@@ -1,17 +1,16 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/atofighi/phpquery/phpQuery/phpQuery.php';
-require_once 'Classes/PHPExcel.php'; // Подключаем библиотеку PHPExcel
 header('Content-Type: text/html; charset=utf-8');
 //header('Content-Type: image/jpeg');
 use GuzzleHttp\Client as Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 function karavandnepr()
 {
-    function newFormatDateKaravander($date)
+    function newFormatDateDafimax($date)
     {
         $date = str_replace(
-            array('января', 'фервраля', 'марта', 'апреля', 'майа', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'),
+            array('января', 'февраля', 'мая', 'апреля', 'майа', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'),
             array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
             $date);
         return date("m-d", strtotime($date));
@@ -28,7 +27,7 @@ function karavandnepr()
     $cookieJar2 = new FileCookieJar($cookieFile);
     $http_client = new Client(['base_uri' => 'https://multiplex.ua/', 'cookies' => $cookieJar2]);
 
-    $response = $http_client->request('GET', 'https://multiplex.ua/cinema/karavandnepr');
+    $response = $http_client->request('GET', 'https://multiplex.ua/ua/cinema/karavandnepr');
 //echo $body = $response->getBody(true);die(0);
     $body2 = $response->getBody(true);
     $d = phpQuery::newDocumentHTML($body2);
@@ -43,8 +42,7 @@ function karavandnepr()
 
     }
     $arr_films = array_unique($arrn);
-//var_dump($arrn);
-//var_dump($arr_films);die;
+var_dump($arr_films);die;
 //$count_body4=count($arr_films);
 //echo $arr_films[0];
     $n = 0;
@@ -121,9 +119,9 @@ function karavandnepr()
             if($bb_mous[1]=="января"and $dd==2016)
             {
                 $dd++;
-                $arr_title = $dd.'-'.newFormatDateKaravander($bb);
+                $arr_title = $dd.'-'.newFormatDateDafimax($bb);
             }else{
-                $arr_title = $dd.'-'.newFormatDateKaravander($bb);
+                $arr_title = $dd.'-'.newFormatDateDafimax($bb);
             }
 
             if (isset($nn)) $enn[$nn] = $arr_title;
@@ -143,7 +141,6 @@ function karavandnepr()
                     echo $valnn."(".trim($str_kinds[$key]).")";
                     $sessions[$value123][] = $valnn."(".trim($str_kinds[$key]).")";
                 }elseif($valnn){
-                    var_dump($valnn);
                     $sessions[$value123][] = $valnn;
                 }
             }
@@ -181,3 +178,5 @@ function karavandnepr()
 }
 //var_dump($array_mas_cinemasp[0]);
 //var_dump($array_mas_cinemasp[1]);
+$nn=karavandnepr();
+var_dump($nn);

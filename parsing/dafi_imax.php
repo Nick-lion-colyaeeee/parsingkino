@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/atofighi/phpquery/phpQuery/phpQuery.php';
-require_once 'Classes/PHPExcel.php'; // Подключаем библиотеку PHPExcel
 header('Content-Type: text/html; charset=utf-8');
 //header('Content-Type: image/jpeg');
 use GuzzleHttp\Client as Client;
@@ -11,7 +10,7 @@ function dafi_imax()
     function newFormatDateDafimax($date)
     {
         $date = str_replace(
-            array('января', 'фервраля', 'марта', 'апреля', 'майа', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'),
+            array('января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'),
             array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
             $date);
         return date("m-d", strtotime($date));
@@ -20,12 +19,14 @@ function dafi_imax()
     $array_mas_cinemas = array();
     $date = array();
     $date_sians = array();
+
     $name_cinima = "karavandnepr";
 //$postfields = array('Username' => 'csYLisovskiy', 'pw' => 'BLueLake1027', 'Submit' => 'Login');
-    $jar = new \GuzzleHttp\Cookie\CookieJar;
-    $cookieFile = $_SERVER['DOCUMENT_ROOT'] . '/cookies/karavandnepr.txt';
-    $cookieJar2 = new FileCookieJar($cookieFile);
-    $http_client = new Client(['base_uri' => 'https://multiplex.ua/', 'cookies' => $cookieJar2]);
+//    $jar = new \GuzzleHttp\Cookie\CookieJar;
+//    $cookieFile = $_SERVER['DOCUMENT_ROOT'] . '/cookies/karavandnepr.txt';
+//    $cookieJar2 = new FileCookieJar($cookieFile);
+
+    $http_client = new Client(['base_uri' => 'https://multiplex.ua/']);
 
     $response = $http_client->request('GET', 'https://multiplex.ua/cinema/dafi_imax');
 //echo $body = $response->getBody(true);die(0);
@@ -48,14 +49,13 @@ function dafi_imax()
 //echo $arr_films[0];
     $n = 0;
     foreach ($arr_films as $k => $v) {
-//        echo $k;
         $response2 = $http_client->request('GET', $k);
         $body3 = $response2->getBody(true);
         $d2 = phpQuery::newDocumentHTML($body3);
 
         $td8 = $d2->find("div[class=movie_info]");
         $pq8 = pq($td8);
-      echo  $title = $v;
+        $title = $v;
         $duration = '';
         $genre = '';
         $actors = '';
@@ -68,6 +68,7 @@ function dafi_imax()
         $trailer = "https://www.youtube.com/watch?v=" . $pq8->find("div[class=trailerbut playtrailer]")->attr('data-trailerid');
         $long_description = $pq8->find("p[class=movie_description]")->text();
         $td3 = $d2->find("div[class=column3] div[class=date_select] ul li");
+
         $i = 0;
         $td9 = $d2->find("ul[class=movie_credentials] li");
         foreach ($td9 as $key_td9) {
@@ -115,7 +116,7 @@ function dafi_imax()
             $str = $pq2->find("p")->text();
             $str = substr($str, stripos($str, ",") + 1);
             $dd= date('Y');
-             $bb = trim($str);
+            $bb = trim($str);
             $bb_mous=explode(" ",$bb);
             if($bb_mous[1]=="января"and $dd==2016)
             {
@@ -131,23 +132,21 @@ function dafi_imax()
             $td3 = $d2->find("div[data-selector={$key123}] div[class=cinema]")->eq(0);
             $pq3 = pq($td3);
             $pq4 = pq($td3);
-             $str = $pq3->find("p[class=time] span")->text();
-              $str_kind = $pq4->find("p[class=tag]")->text();
-             $str=trim($str);
+            $str = $pq3->find("p[class=time] span")->text();
+            $str_kind = $pq4->find("p[class=tag]")->text();
+            $str=trim($str);
             $str_kind=trim($str_kind);
             $str_arr= explode("\n",$str);
             $str_kinds= explode("\n",$str_kind);
             foreach ($str_arr as $key =>$valnn) {
                 if(isset($valnn) and !$str_kinds[$key]==='') {
-                   echo $valnn."(".trim($str_kinds[$key]).")";
+                    echo $valnn."(".trim($str_kinds[$key]).")";
                     $sessions[$value123][] = $valnn."(".trim($str_kinds[$key]).")";
                 }elseif($valnn){
-                    var_dump($valnn);
                     $sessions[$value123][] = $valnn;
                 }
             }
         }
-        var_dump($sessions);
         if($sessions) {
             $array_mas_cinemasp[$n] = [
                 'title' => $title,
@@ -166,8 +165,7 @@ function dafi_imax()
                 'sessions_cinemas' => $sessions,
             ];
         }
-//        var_dump($sessions);
-        if($n == 5)die;
+//        if($n == 4)die;
 
         $n++;
 
@@ -182,3 +180,4 @@ function dafi_imax()
 }
 //var_dump($array_mas_cinemasp[0]);
 //var_dump($array_mas_cinemasp[1]);
+var_dump(dafi_imax());

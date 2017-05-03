@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/atofighi/phpquery/phpQuery/phpQuery.php';
-require_once 'Classes/PHPExcel.php'; // Подключаем библиотеку PHPExcel
 header('Content-Type: text/html; charset=utf-8');
 //header('Content-Type: image/jpeg');
 use GuzzleHttp\Client as Client;
@@ -24,10 +23,22 @@ function mostkino()
 //echo $body = $response->getBody(true);die(0);
     $n = json_decode($response->getBody(true), true);
 
+//    $responses2 = $http_client->request('GET', 'https://bilet.privatbank.ua/ec/cinema/main?broker_id=KinoTema&city_id=21&lang=ru&ts={$n[\'ts\']}');
 
-    $responses2 = $http_client->request('GET', 'https://bilet.privatbank.ua/ec/cinema/main?broker_id=KinoTema&city_id=21&lang=ru&ts={$n[\'ts\']}');
+    $date_from=date("d.m.Y");
+    $date = new DateTime($date_from);
+    $date->modify('+7 day');
+      $date_to=$date->format('d.m.Y');
+
+    $responses2 = $http_client->request('GET', 'https://bilet.privatbank.ua/ec/cinema/main?broker_id=KinoTema&city_id=21&date_from='.$date_from.'&date_to='.$date_to.'&is_mobile=0&lang=ru&ts={$n[\'ts\']}');
+
+
     $responses2->getBody(true);
+
     $body2 = json_decode($responses2->getBody(true), true);
+
+
+
     $count_body2 = count($body2['events']);
     $count_places_body1 = count($body2['places']);
     $count_places_body2 = $body2['places'];
@@ -38,7 +49,7 @@ function mostkino()
         $image_movis = $body2['events'][$i]['image'];
         $long_description = $body2['events'][$i]['long_description'];
         $actors = $body2['events'][$i]['additional_info']['actors'];
-        $genre = $body2['events'][$i]['additional_info']['genres'];
+        $genre = implode(",",$body2['events'][$i]['additional_info']['genres']);
         $releaseyear = $body2['events'][$i]['additional_info']['releaseYear'];
 
         $productionCountry = $body2['events'][$i]['additional_info']['productionCountry'];
@@ -50,13 +61,12 @@ function mostkino()
         foreach ($count_places_body2 as $key) {
 
             $key2=trim(str_replace(array('[2D]','[3D]'),'',$key['name']));
-//             echo $key2;if($key2===$title )echo 2 ;
             $array_kinds = explode("[", $key['name']);
+
             if ($key2 === $title and mb_strtolower($key['structure']['name'],'UTF-8') === mb_strtolower($name_cinima,'UTF-8')) {
                 if(@in_array($key2,$name_all_film))
                 {
                     $array_date_seans = explode(" ", $key['start_date']);
-
                     $date_sians0 = $array_date_seans[0];
                     $time_sians0 = $array_date_seans[1];
                     $key_3 = array_search($key2, $name_all_film);
@@ -71,6 +81,7 @@ function mostkino()
                         unset($time_sians0);
                     }
                 }else {
+
                     $array_date_seans = explode(" ", $key['start_date']);
                     $date_sians = $array_date_seans[0];
                     $time_sians = $array_date_seans[1];
@@ -103,6 +114,7 @@ function mostkino()
                 'duration' => $duration,
                 'description' => $long_description,
                 'trailer' => '',
+//                'images' => '<img alt="" class="image-block banner-image" data-ng-hide="spinner || errorMsg" data-ng-src="' . $image_movis . '" src="' . $image_movis . '">',
                 'images' => '<img alt="" class="image-block banner-image" data-ng-hide="spinner || errorMsg" data-ng-src="' . $image_movis . '" src="' . $image_movis . '">',
                 'sessions_cinemas' => $rrrrr,
             ];
@@ -129,7 +141,9 @@ function mostkino()
         unset($http_client);
 
     }
-    var_dump($array_mas_cinemasp);die;
+//    var_dump($name_all_film);
     return $array_mas_cinemasp;
     unset($name_all_film);
 }
+$a=mostkino();
+var_dump($a);

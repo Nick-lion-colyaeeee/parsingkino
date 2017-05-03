@@ -1,31 +1,23 @@
 <?php
-require_once 'karavan.php';
+//require_once 'mostkino.php';
 //require_once 'materikkion.php';
-//include 'karavan.php';
-//include 'materikkion.php';
-//include 'mostkino.php';
-//include 'pravda_kino.php';
+require_once 'eventsFacebook.php';
+//require_once 'dafi_imax.php';
+//require_once 'karavan.php';
 //require_once 'pravda_kino.php';
-//require_once 'pravda_kino.php';
-//$host = 'mistoev.mysql.ukraine.com.ua';
-//$user = 'mistoev_db';
-//$pass = 'wh7z5eyd';
-//$db_connect = mysqli_connect($host, $user, $pass);
-//mysqli_select_db($db_connect,'mistoev_db');
-//$arrays_dafi_imax = dafi_imax();
-//var_dump($arrays_dafi_imax);
-//
-$arrays_karavan = karavandnepr();
-var_dump($arrays_karavan);
+$host = 'mistoev.mysql.ukraine.com.ua';
+$user = 'mistoev_db';
+$pass = 'wh7z5eyd';
+$db_connect = mysqli_connect($host, $user, $pass);
+mysqli_select_db($db_connect,'mistoev_db');
+//$big_array = karavandnepr_dafi_imax();
+//$arrays_dafi_imax = $big_array[1];
+//$arrays_karavan = $big_array[0];
 //$arrays_materuk_kino = materikkion();
-//var_dump($arrays_materuk_kino);
 //$arrays_most_kino = mostkino();
-//var_dump($arrays_most_kino);
 //$arrays_pravda_kino = getFilm();
-//var_dump($arrays_pravda_kino);
-//$arrays_most_kino;
-//$arrays_events = getEvents();
-/////////////////////////////////////ÐšÐ°Ñ€Ð°Ð²Ð°Ð½//////////////////////////////////////////////////////////
+$arrays_events = getEvents();
+/////////////////////////////////////Êàðàâàí//////////////////////////////////////////////////////////
 //$result = mysqli_query($db_connect, "SELECT director FROM films");
 //$i=1;
 //while($info = mysqli_fetch_array($result))
@@ -84,13 +76,7 @@ var_dump($arrays_karavan);
 //                                if(!isset($arrays_cinema_dates)){
 //                                    mysqli_query($db_connect, "INSERT INTO cinema_karavan (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
 //                                }else {
-//                                    if (in_array($date, $arrays_cinema_dates)) {
-//                                        mysqli_query($db_connect, "DELETE FROM cinema_karavan WHERE cinema_date='" . $date . "'");
-//                                        mysqli_query($db_connect, "INSERT INTO cinema_karavan (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                        $array=array_flip($arrays_cinema_dates);
-//                                        unset($array[$date]);
-//                                        $arrays_cinema_dates=array_flip($array);
-//                                    }else{
+//                                    if (!in_array($date, $arrays_cinema_dates)) {
 //                                        mysqli_query($db_connect, "INSERT INTO cinema_karavan (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
 //                                    }
 //                                }
@@ -122,8 +108,8 @@ var_dump($arrays_karavan);
 //    }else{
 //    }
 //}
-//
-///////////////////////////////////////Ð”Ð°Ñ„Ñ– ÐœÐ°ÐºÑ//////////////////////////////////////////////////////
+
+/////////////////////////////////////Äàô³ Ìàêñ//////////////////////////////////////////////////////
 //$result = mysqli_query($db_connect, "SELECT director FROM films");
 //$i=1;
 //while($info = mysqli_fetch_array($result))
@@ -179,13 +165,7 @@ var_dump($arrays_karavan);
 //                                if(!isset($arrays_cinema_dates)){
 //                                    mysqli_query($db_connect, "INSERT INTO cinema_dafi_imax (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
 //                                }else {
-//                                    if (in_array($date, $arrays_cinema_dates)) {
-//                                        mysqli_query($db_connect, "DELETE FROM cinema_dafi_imax WHERE cinema_date='" . $date . "'");
-//                                        mysqli_query($db_connect, "INSERT INTO cinema_dafi_imax (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                        $array=array_flip($arrays_cinema_dates);
-//                                        unset($array[$date]);
-//                                        $arrays_cinema_dates=array_flip($array);
-//                                    }else{
+//                                    if (!in_array($date, $arrays_cinema_dates)) {
 //                                        mysqli_query($db_connect, "INSERT INTO cinema_dafi_imax (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
 //                                    }
 //                                }
@@ -218,9 +198,9 @@ var_dump($arrays_karavan);
 //
 //    }
 //}
-//
-//
-///////////////////////////////////////////////////ÐœÐ°Ñ‚ÐµÑ€Ð¸Ðº ÐšÑ–Ð½Ð¾////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////Ìàòåðèê Ê³íî////////////////////////////////////////////////
 //$result = mysqli_query($db_connect, "SELECT director FROM films");
 //$i=1;
 //while($info = mysqli_fetch_array($result))
@@ -236,20 +216,18 @@ var_dump($arrays_karavan);
 //if(!isset($arrays_info_db)){
 //    if(isset($arrays_materuk_kino)) {
 //        foreach ($arrays_materuk_kino as $materuk_kino) {
-//            if (isset($materuk_kino['director'])) {
-//                $str = strpos($materuk_kino['director'], ',');
-//                if ($str != 0) {
-//                    $materuk_kino['director'] = substr($materuk_kino['director'], 0, $str);
-//                }
-//                $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $materuk_kino['director']);
-//                $materuk_kino['director'] = trim($str1);
-//                mysqli_query($db_connect, "INSERT INTO films (title, country, genre, director, writer, producer, actors, premiere, rating_imdb, duration, description, trailer, image) VALUES ('" . iconv('utf-8', 'windows-1251', $materuk_kino['title']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['country']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['genre']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['director']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['writer']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['producer']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['actors']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['premiere']) . "', '" . $materuk_kino['imbd'] . "', '" . $materuk_kino['duration'] . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['description']) . "', '" . $materuk_kino['trailer'] . "', '" . $materuk_kino['image'] . "')");
-//                $result = mysqli_query($db_connect, "SELECT MAX(id) FROM films");
-//                $film_id = mysqli_fetch_array($result);
-//                foreach ($materuk_kino['sessions_cinemas'] as $date => $sessions) {
-//                    foreach ($sessions as $session) {
-//                        mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id['MAX(id)'] . "', '" . $date . "', '" . $session . "')");
-//                    }
+//            $str = strpos($materuk_kino['director'], ',');
+//            if($str != 0) {
+//                $materuk_kino['director'] = substr($materuk_kino['director'], 0, $str);
+//            }
+//            $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $materuk_kino['director']);
+//            $materuk_kino['director'] = trim($str1);
+//            mysqli_query($db_connect, "INSERT INTO films (title, country, genre, director, writer, producer, actors, premiere, rating_imdb, duration, description, trailer, image) VALUES ('" . iconv('utf-8','windows-1251',$materuk_kino['title']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['country']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['genre']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['director']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['writer']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['producer']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['actors']) . "', '" . iconv('utf-8','windows-1251',$materuk_kino['premiere']) . "', '" . $materuk_kino['imbd'] . "', '" . $materuk_kino['duration'] . "', '" . iconv('utf-8','windows-1251',$materuk_kino['description']) . "', '" . $materuk_kino['trailer'] . "', '" . $materuk_kino['image'] . "')");
+//            $result = mysqli_query($db_connect, "SELECT MAX(id) FROM films");
+//            $film_id = mysqli_fetch_array($result);
+//            foreach ($materuk_kino['sessions_cinemas'] as $date => $sessions) {
+//                foreach ($sessions as $session) {
+//                    mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id['MAX(id)'] . "', '" . $date . "', '" . $session . "')");
 //                }
 //            }
 //        }
@@ -258,50 +236,38 @@ var_dump($arrays_karavan);
 //}else {
 //    if (isset($arrays_materuk_kino)) {
 //            foreach ($arrays_materuk_kino as $materuk_kino) {
-//                if(isset($materuk_kino['director'])) {
+//                $str = strpos($materuk_kino['director'], ',');
+//                if($str != 0) {
+//                    $materuk_kino['director'] = substr($materuk_kino['director'], 0, $str);
+//                }
+//                $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $materuk_kino['director']);
+//                $materuk_kino['director'] = trim($str1);
+//                if (in_array(iconv('utf-8', 'windows-1251', $materuk_kino['director']), $arrays_info_db)) {
+//                    $film_id = array_search(iconv('utf-8', 'windows-1251', $materuk_kino['director']), $arrays_info_db);
+//                    foreach ($materuk_kino['sessions_cinemas'] as $date => $sessions) {
+//                        foreach ($sessions as $session) {
+//                            if(!isset($arrays_cinema_dates)){
+//                                mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
+//                            }else {
+//                                if (!in_array($date, $arrays_cinema_dates)) {
+//                                    mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
+//                                }
+//                            }
+//                        }
+//                    }
+//                } else {
 //                    $str = strpos($materuk_kino['director'], ',');
-//                    if ($str != 0) {
+//                    if($str != 0) {
 //                        $materuk_kino['director'] = substr($materuk_kino['director'], 0, $str);
 //                    }
 //                    $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $materuk_kino['director']);
 //                    $materuk_kino['director'] = trim($str1);
-//                    if (in_array(iconv('utf-8', 'windows-1251', $materuk_kino['director']), $arrays_info_db)) {
-//                        $film_id = array_search(iconv('utf-8', 'windows-1251', $materuk_kino['director']), $arrays_info_db);
-//                        if(isset($materuk_kino['sessions_cinemas'])) {
-//                            foreach ($materuk_kino['sessions_cinemas'] as $date => $sessions) {
-//                                foreach ($sessions as $session) {
-//                                    if (!isset($arrays_cinema_dates)) {
-//                                        mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                    } else {
-//                                        if (in_array($date, $arrays_cinema_dates)) {
-//                                            mysqli_query($db_connect, "DELETE FROM cinema_materuk_kino WHERE cinema_date='" . $date . "'");
-//                                            mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                            $array = array_flip($arrays_cinema_dates);
-//                                            unset($array[$date]);
-//                                            $arrays_cinema_dates = array_flip($array);
-//                                        } else {
-//                                            mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        $str = strpos($materuk_kino['director'], ',');
-//                        if ($str != 0) {
-//                            $materuk_kino['director'] = substr($materuk_kino['director'], 0, $str);
-//                        }
-//                        $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $materuk_kino['director']);
-//                        $materuk_kino['director'] = trim($str1);
-//                        mysqli_query($db_connect, "INSERT INTO films (title, country, genre, director, writer, producer, actors, premiere, rating_imdb, duration, description, trailer, image) VALUES ('" . iconv('utf-8', 'windows-1251', $materuk_kino['title']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['country']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['genre']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['director']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['writer']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['producer']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['actors']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['premiere']) . "', '" . $materuk_kino['imbd'] . "', '" . $materuk_kino['duration'] . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['description']) . "', '" . $materuk_kino['trailer'] . "', '" . $materuk_kino['image'] . "')");
-//                        $result = mysqli_query($db_connect, "SELECT MAX(id) FROM films");
-//                        $film_id = mysqli_fetch_array($result);
-//                        if(isset($materuk_kino['sessions_cinemas'])) {
-//                            foreach ($materuk_kino['sessions_cinemas'] as $date => $sessions) {
-//                                foreach ($sessions as $session) {
-//                                    mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id['MAX(id)'] . "', '" . $date . "', '" . $session . "')");
-//                                }
-//                            }
+//                    mysqli_query($db_connect, "INSERT INTO films (title, country, genre, director, writer, producer, actors, premiere, rating_imdb, duration, description, trailer, image) VALUES ('" . iconv('utf-8', 'windows-1251', $materuk_kino['title']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['country']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['genre']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['director']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['writer']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['producer']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['actors']) . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['premiere']) . "', '" . $materuk_kino['imbd'] . "', '" . $materuk_kino['duration'] . "', '" . iconv('utf-8', 'windows-1251', $materuk_kino['description']) . "', '" . $materuk_kino['trailer'] . "', '" . $materuk_kino['image'] . "')");
+//                    $result = mysqli_query($db_connect, "SELECT MAX(id) FROM films");
+//                    $film_id = mysqli_fetch_array($result);
+//                    foreach ($materuk_kino['sessions_cinemas'] as $date => $sessions) {
+//                        foreach ($sessions as $session) {
+//                            mysqli_query($db_connect, "INSERT INTO cinema_materuk_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id['MAX(id)'] . "', '" . $date . "', '" . $session . "')");
 //                        }
 //                    }
 //                }
@@ -310,9 +276,9 @@ var_dump($arrays_karavan);
 //
 //    }
 //}
-//
-//
-//////////////////////////////////////////////ÐœÐ¾ÑÑ‚ ÐšÑ–Ð½Ð¾///////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////Ìîñò Ê³íî///////////////////////////////////////////////////////////
 //$result = mysqli_query($db_connect, "SELECT director FROM films");
 //$i=1;
 //while($info = mysqli_fetch_array($result))
@@ -328,9 +294,49 @@ var_dump($arrays_karavan);
 //if(!isset($arrays_info_db)){
 //    if(isset($arrays_most_kino)) {
 //        foreach ($arrays_most_kino as $most_kino) {
-//            if(isset($most_kino['director'])) {
+//            $str = strpos($most_kino['director'], ',');
+//            if($str != 0) {
+//                $most_kino['director'] = substr($most_kino['director'], 0, $str);
+//            }
+//            $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $most_kino['director']);
+//            $most_kino['director'] = trim($str1);
+//            mysqli_query($db_connect, "INSERT INTO films (title, country, genre, director, writer, producer, actors, premiere, rating_imdb, duration, description, trailer, image) VALUES ('" . iconv('utf-8','windows-1251',$most_kino['title']) . "', '" . iconv('utf-8','windows-1251',$most_kino['country']) . "', '" . iconv('utf-8','windows-1251',$most_kino['genre']) . "', '" . iconv('utf-8','windows-1251',$most_kino['director']) . "', '" . iconv('utf-8','windows-1251',$most_kino['writer']) . "', '" . iconv('utf-8','windows-1251',$most_kino['producer']) . "', '" . iconv('utf-8','windows-1251',$most_kino['actors']) . "', '" . iconv('utf-8','windows-1251',$most_kino['premiere']) . "', '" . $most_kino['imbd'] . "', '" . $most_kino['duration'] . "', '" . iconv('utf-8','windows-1251',$most_kino['description']) . "', '" . $most_kino['trailer'] . "', '" . $most_kino['image'] . "')");
+//            $result = mysqli_query($db_connect, "SELECT MAX(id) FROM films");
+//            $film_id = mysqli_fetch_array($result);
+//            foreach ($most_kino['sessions_cinemas'] as $date => $sessions) {
+//                foreach ($sessions as $session) {
+//                    mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id['MAX(id)'] . "', '" . $date . "', '" . $session . "')");
+//                }
+//            }
+//        }
+//    }else{
+//
+//    }
+//}else {
+//    if (isset($arrays_most_kino)) {
+//        foreach ($arrays_most_kino as $most_kino) {
+//            $str = strpos($most_kino['director'], ',');
+//            if($str != 0) {
+//                $most_kino['director'] = substr($most_kino['director'], 0, $str);
+//            }
+//            $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $most_kino['director']);
+//            $most_kino['director'] = trim($str1);
+//            if (in_array(iconv('utf-8', 'windows-1251', $most_kino['director']), $arrays_info_db)) {
+//                $film_id = array_search(iconv('utf-8', 'windows-1251', $most_kino['director']), $arrays_info_db);
+//                foreach ($most_kino['sessions_cinemas'] as $date => $sessions) {
+//                    foreach ($sessions as $session) {
+//                        if(!isset($arrays_cinema_dates)){
+//                            mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
+//                        }else {
+//                            if (!in_array($date, $arrays_cinema_dates)) {
+//                                mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
+//                            }
+//                        }
+//                    }
+//                }
+//            } else {
 //                $str = strpos($most_kino['director'], ',');
-//                if ($str != 0) {
+//                if($str != 0) {
 //                    $most_kino['director'] = substr($most_kino['director'], 0, $str);
 //                }
 //                $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $most_kino['director']);
@@ -348,62 +354,10 @@ var_dump($arrays_karavan);
 //    }else{
 //
 //    }
-//}else {
-//    if (isset($arrays_most_kino)) {
-//        foreach ($arrays_most_kino as $most_kino) {
-//            if(isset($most_kino['director'])) {
-//                $str = strpos($most_kino['director'], ',');
-//                if ($str != 0) {
-//                    $most_kino['director'] = substr($most_kino['director'], 0, $str);
-//                }
-//                $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $most_kino['director']);
-//                $most_kino['director'] = trim($str1);
-//                if (in_array(iconv('utf-8', 'windows-1251', $most_kino['director']), $arrays_info_db)) {
-//                    $film_id = array_search(iconv('utf-8', 'windows-1251', $most_kino['director']), $arrays_info_db);
-//                    if(isset($most_kino['sessions_cinemas'])) {
-//                        foreach ($most_kino['sessions_cinemas'] as $date => $sessions) {
-//                            foreach ($sessions as $session) {
-//                                if (!isset($arrays_cinema_dates)) {
-//                                    mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                } else {
-//                                    if (in_array($date, $arrays_cinema_dates)) {
-//                                        mysqli_query($db_connect, "DELETE FROM cinema_most_kino WHERE cinema_date='" . $date . "'");
-//                                        mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                        $array = array_flip($arrays_cinema_dates);
-//                                        unset($array[$date]);
-//                                        $arrays_cinema_dates = array_flip($array);
-//                                    } else {
-//                                        mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                } else {
-//                    $str = strpos($most_kino['director'], ',');
-//                    if ($str != 0) {
-//                        $most_kino['director'] = substr($most_kino['director'], 0, $str);
-//                    }
-//                    $str1 = str_replace(Chr(194) . Chr(160), Chr(32), $most_kino['director']);
-//                    $most_kino['director'] = trim($str1);
-//                    mysqli_query($db_connect, "INSERT INTO films (title, country, genre, director, writer, producer, actors, premiere, rating_imdb, duration, description, trailer, image) VALUES ('" . iconv('utf-8', 'windows-1251', $most_kino['title']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['country']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['genre']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['director']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['writer']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['producer']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['actors']) . "', '" . iconv('utf-8', 'windows-1251', $most_kino['premiere']) . "', '" . $most_kino['imbd'] . "', '" . $most_kino['duration'] . "', '" . iconv('utf-8', 'windows-1251', $most_kino['description']) . "', '" . $most_kino['trailer'] . "', '" . $most_kino['image'] . "')");
-//                    $result = mysqli_query($db_connect, "SELECT MAX(id) FROM films");
-//                    $film_id = mysqli_fetch_array($result);
-//                    foreach ($most_kino['sessions_cinemas'] as $date => $sessions) {
-//                        foreach ($sessions as $session) {
-//                            mysqli_query($db_connect, "INSERT INTO cinema_most_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id['MAX(id)'] . "', '" . $date . "', '" . $session . "')");
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }else{
-//
-//    }
 //}
-//
-//
-///////////////////////////////////////////////////ÐŸÑ€Ð°Ð²Ð´Ð° ÐšÑ–Ð½Ð¾//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////Ïðàâäà Ê³íî//////////////////////////////////////////////////////////////////////////////////////////////////
 //$result = mysqli_query($db_connect, "SELECT director FROM films");
 //$i=1;
 //while($info = mysqli_fetch_array($result))
@@ -451,8 +405,6 @@ var_dump($arrays_karavan);
 //                    if ($str != 0) {
 //                        $pravda_kino['director'] = substr($pravda_kino['director'], 0, $str);
 //                    }
-//                    var_dump(iconv('utf-8', 'windows-1251', trim($pravda_kino['director'])));
-//                    var_dump($arrays_info_db);
 //                    if (in_array(iconv('utf-8', 'windows-1251', trim($pravda_kino['director'])), $arrays_info_db)) {
 //                        $film_id = array_search(iconv('utf-8', 'windows-1251', trim($pravda_kino['director'])), $arrays_info_db);
 //                        if (isset($pravda_kino['sessions_cinemas'])) {
@@ -462,13 +414,7 @@ var_dump($arrays_karavan);
 //                                        if (!isset($arrays_cinema_dates)) {
 //                                            mysqli_query($db_connect, "INSERT INTO cinema_pravda_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
 //                                        } else {
-//                                            if (in_array($date, $arrays_cinema_dates)) {
-//                                                mysqli_query($db_connect, "DELETE FROM cinema_pravda_kino WHERE cinema_date='" . $date . "'");
-//                                                mysqli_query($db_connect, "INSERT INTO cinema_pravda_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
-//                                                $array=array_flip($arrays_cinema_dates);
-//                                                unset($array[$date]);
-//                                                $arrays_cinema_dates=array_flip($array);
-//                                            }else{
+//                                            if (!in_array($date, $arrays_cinema_dates)) {
 //                                                mysqli_query($db_connect, "INSERT INTO cinema_pravda_kino (film_id, cinema_date, sessions) VALUES ('" . $film_id . "', '" . $date . "', '" . $session . "')");
 //                                            }
 //                                        }
@@ -504,32 +450,45 @@ var_dump($arrays_karavan);
 //}
 
 
-/////////////////////////////////////ÐŸÐ¾Ð´Ñ–Ñ—/////////////////////////////////////////////////////////////////////
-//$result_e = mysqli_query($db_connect, "SELECT event_id FROM events");
-//while($info_e = mysqli_fetch_array($result_e))
-//{
-//    $arrays_info_events[]=$info_e['event_id'];
-//}
-//if(!isset($arrays_info_events)){
-//    l:
-//    if(isset($arrays_events)) {
-//        foreach ($arrays_events as $event) {
-//            mysqli_query($db_connect, "INSERT INTO events (event_id, title, photo, description, event_date, name_institution, country, city, street, latitude, longitude) VALUES ('" . $event['id'] . "', '" . $event['name'] . "', '" . $event['cover']['source'] . "', '" . $event['description'] . "', '" . $event['start_time'] . "', '" . $event['place']['name'] . "', '" . $event['place']['location']['country'] . "', '" . $event['place']['location']['city'] . "', '" . $event['place']['location']['street'] . "', '" . $event['place']['location']['latitude'] . "', '" . $event['place']['location']['longitude'] . "')");
-//        }
-//    }else{
-//        goto l;
-//    }
-//}else{
-//    j:
-//    if(isset($arrays_events)){
-//            foreach ($arrays_events as $event){
-//                if(!in_array($event['event_id'], $arrays_info_events)){
-//                    mysqli_query($db_connect, "INSERT INTO events (event_id, title, photo, description, event_date, name_institution, country, city, street, latitude, longitude) VALUES ('" . $event['id'] . "', '" . $event['name'] . "', '" . $event['cover']['source'] . "', '" . $event['description'] . "', '" . $event['start_time'] . "', '" . $event['place']['name'] . "', '" . $event['place']['location']['country'] . "', '" . $event['place']['location']['city'] . "', '" . $event['place']['location']['street'] . "', '" . $event['place']['location']['latitude'] . "', '" . $event['place']['location']['longitude'] . "')");
-//                }
-//            }
-//    }else{
-//        goto j;
-//    }
-//}
+/////////////////////////////////////Ïîä³¿/////////////////////////////////////////////////////////////////////
+$result_e = mysqli_query($db_connect, "SELECT event_id FROM events");
+while($info_e = mysqli_fetch_array($result_e))
+{
+    $arrays_info_events[]=$info_e['event_id'];
+}
+if(!isset($arrays_info_events)){
+    if(isset($arrays_events)) {
+        foreach ($arrays_events as $event) {
+            $array_date_seans = explode(" ", $event->start_time->date);
+            $event_date = $array_date_seans[0];
+            $event_time = $array_date_seans[1];
+            $str = strpos($event_time, '.');
+            $event_time = substr($event_time, 0, $str);
 
-//mysqli_close($db_connect);
+            mysqli_query($db_connect, "SET NAMES 'utf8'");
+            mysqli_query($db_connect, "SET CHARACTER SET 'utf8'");
+			mysqli_query($db_connect, "INSERT INTO events (event_id, title, photo, description, event_date, event_time, name_institution, country, city, street, latitude, longitude) VALUES ('" . $event->id . "', '" . preg_replace("/'/"," ",$event->name) . "', '" . $event->cover->source . "', '" .  preg_replace("/'/"," ",$event->description) . "', '" . $event_date . "', '" . $event_time . "', '" . preg_replace("/'/"," ",$event->place->name) . "', '" . $event->place->location->country . "', '" . preg_replace("/'/"," ",$event->place->location->city) . "', '" . preg_replace("/'/"," ",$event->place->location->street) . "', '" . $event->place->location->latitude . "', '" . $event->place->location->longitude . "')");
+        }
+    }else{
+    }
+}else{
+    if(isset($arrays_events)){
+            foreach ($arrays_events as $event){
+                if(!in_array($event->id, $arrays_info_events)){
+                    $array_date_seans = explode(" ", $event->start_time->date);
+                    $event_date = trim($array_date_seans[0]);
+                    $event_time = $array_date_seans[1];
+                    $str = strpos($event_time, '.');
+                    $event_time = substr($event_time, 0, $str);
+                    mysqli_query($db_connect, "SET NAMES 'utf8'");
+                    mysqli_query($db_connect, "SET CHARACTER SET 'utf8'");
+					mysqli_query($db_connect, "INSERT INTO events (event_id, title, photo, description, event_date, event_time, name_institution, country, city, street, latitude, longitude) VALUES ('" . $event->id . "', '" . preg_replace("/'/"," ",$event->name) . "', '" . $event->cover->source . "', '" . preg_replace("/'/"," ",$event->description) . "', '" . $event_date . "', '" . $event_time . "', '" .  preg_replace("/'/"," ",$event->place->name) . "', '" . $event->place->location->country . "', '" . preg_replace("/'/"," ",$event->place->location->city) . "', '" . preg_replace("/'/"," ",$event->place->location->street) . "', '" . $event->place->location->latitude . "', '" . $event->place->location->longitude . "')");
+                    //mysqli_query($db_connect, "INSERT INTO events (event_id, title, photo, description, event_date, name_institution, country, city, street, latitude, longitude) VALUES ('" . $event['id'] . "', '" . $event['name'] . "', '" . $event['cover']['source'] . "', '" . $event['description'] . "', '" . $event['start_time'] . "', '" . $event['place']['name'] . "', '" . $event['place']['location']['country'] . "', '" . $event['place']['location']['city'] . "', '" . $event['place']['location']['street'] . "', '" . $event['place']['location']['latitude'] . "', '" . $event['place']['location']['longitude'] . "')");
+                }
+            }
+    }else{
+
+    }
+}
+
+mysqli_close($db_connect);

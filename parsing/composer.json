@@ -13,6 +13,7 @@
     "guzzlehttp/guzzle": "6.2.2",
     "atofighi/phpquery": "2.0.1",
     "electrolinux/phpquery": "^0.9.6",
-    "heretree/phpquery": "0.9.6.x-dev"
+    "heretree/phpquery": "0.9.6.x-dev",
+    "facebook/graph-sdk": "^5.4"
   }
 }

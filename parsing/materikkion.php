@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor/atofighi/phpquery/phpQuery/phpQuery.php';
-require_once 'Classes/PHPExcel.php'; // Подключаем библиотеку PHPExcel
 header('Content-Type: text/html; charset=utf-8');
 //header('Content-Type: image/jpeg');
 use GuzzleHttp\Client as Client;
@@ -24,8 +23,14 @@ function materikkion()
 //echo $body = $response->getBody(true);die(0);
     $n = json_decode($response->getBody(true), true);
 
+    $date_from=date("d.m.Y");
+    $date = new DateTime($date_from);
+    $date->modify('+7 day');
+    $date_to=$date->format('d.m.Y');
 
-    $responses2 = $http_client->request('GET', 'https://bilet.privatbank.ua/ec/cinema/main?broker_id=KinoTema&city_id=21&lang=ru&ts={$n[\'ts\']}');
+    $responses2 = $http_client->request('GET', 'https://bilet.privatbank.ua/ec/cinema/main?broker_id=KinoTema&city_id=21&date_from='.$date_from.'&date_to='.$date_to.'&is_mobile=0&lang=ru&ts={$n[\'ts\']}');
+
+
     $responses2->getBody(true);
     $body2 = json_decode($responses2->getBody(true), true);
     $count_body2 = count($body2['events']);
@@ -38,18 +43,21 @@ function materikkion()
         $image_movis = $body2['events'][$i]['image'];
         $long_description = $body2['events'][$i]['long_description'];
         $actors = $body2['events'][$i]['additional_info']['actors'];
-        $genre = $body2['events'][$i]['additional_info']['genres'];
+        $genre = implode(",",$body2['events'][$i]['additional_info']['genres']);
         $releaseyear = $body2['events'][$i]['additional_info']['releaseYear'];
+
         $productionCountry = $body2['events'][$i]['additional_info']['productionCountry'];
         $director = $body2['events'][$i]['additional_info']['director'];
         $titl = $body2['events'][$i]['events'][0]['name'];
 //        $arrName[]=$titl;
-         $title=trim(str_replace(array('[2D]','[3D]'),'',$titl));
+        $title=trim(str_replace(array('[2D]','[3D]'),'',$titl));
 //    $id_muvis_cinemasp=$body2['events'][$i]['events'][0]['id'];
         $duration = $body2['events'][$i]['additional_info']['duration'];
         foreach ($count_places_body2 as $key) {
-        $key2=trim(str_replace(array('[2D]','[3D]'),'',$key['name']));
-//             echo $key2;if($key2===$title )echo 2 ;
+
+            $key2=trim(str_replace(array('[2D]','[3D]'),'',$key['name']));
+            $array_kinds = explode("[", $key['name']);
+
             if ($key2 === $title and mb_strtolower($key['structure']['name'],'UTF-8') === mb_strtolower($name_cinima,'UTF-8')) {
                 if(@in_array($key2,$name_all_film))
                 {
@@ -59,24 +67,26 @@ function materikkion()
                     $key_3 = array_search($key2, $name_all_film);
 //                    echo $key_3;
                     if(array_key_exists($date_sians0,$rrrrr_clone)){
-                        $rrrrr_clone[$date_sians0][] = $time_sians0;
+                        isset( $array_kinds[1]) ? $rrrrr_clone[$date_sians0][] = $time_sians0."(".trim($array_kinds[1],"]").")":$rrrrr_clone[$date_sians0][] = $time_sians0;
                         unset($date_sians0);
                         unset($time_sians0);
                     }else{
-                        $rrrrr_clone[$date_sians0][] = $time_sians0;
+                        isset( $array_kinds[1]) ? $rrrrr_clone[$date_sians0][] = $time_sians0."(".trim($array_kinds[1],"]").")":$rrrrr_clone[$date_sians0][] = $time_sians0;
                         unset($date_sians0);
                         unset($time_sians0);
                     }
                 }else {
+
                     $array_date_seans = explode(" ", $key['start_date']);
                     $date_sians = $array_date_seans[0];
                     $time_sians = $array_date_seans[1];
                     if (array_key_exists($date_sians, $rrrrr)) {
-                        $rrrrr[$date_sians][] = $time_sians;
+                        isset( $array_kinds[1]) == 1 ? $rrrrr[$date_sians][] = $time_sians."(".trim($array_kinds[1],"]").")":$rrrrr[$date_sians][] = $time_sians;
                         unset($date_sians);
                         unset($time_sians);
                     } else {
-                        $rrrrr[$date_sians][] = $time_sians;
+                        isset( $array_kinds[1]) == 1 ? $rrrrr[$date_sians][] = $time_sians."(".trim($array_kinds[1],"]").")":$rrrrr[$date_sians][] = $time_sians;
+
                         unset($date_sians);
                         unset($time_sians);
                     }
@@ -103,7 +113,7 @@ function materikkion()
                 'duration' => $duration,
                 'description' => $long_description,
                 'trailer' => '',
-                'images' => $image_movis ,
+                'images' => $image_movis,
                 'sessions_cinemas' => $rrrrr,
             ];
         }elseif($rrrrr_clone)
@@ -114,10 +124,10 @@ function materikkion()
 //            var_dump($rrrrr_clone);
 //            var_dump($rrrrr_clone0);
             if(isset($rrrrr_clone0)){
-            $array_mas_cinemasp[$key_3]['sessions_cinemas']=@ array_merge($rrrrr_clone,$rrrrr_clone0);
+                $array_mas_cinemasp[$key_3]['sessions_cinemas']=@ array_merge($rrrrr_clone,$rrrrr_clone0);
 
 //            var_dump($array_mas_cinemasp[$key_3]['title']);
-              }
+            }
             unset($key_3);
         }
         unset($rrrrr);

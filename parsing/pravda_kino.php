@@ -14,8 +14,6 @@ function getFilm(){
         $image = 'http://pravda-kino.dp.ua/'.$image_movis;
         $links = pq($document)->find('#div_3 > div.div_col.dc_1');
         $titles = pq($links)->find('#table_6 > tr:nth-child(2) > td:nth-child(2) > p ')->text();
-
-
         $title_text = str_replace(array(' в 3D',' в 3Д',' 3D',' 3Д',' 3d',' 3д'), '', $titles);
         $title=trim($title_text);
         $titles_oll_name=explode(" ",$titles);
